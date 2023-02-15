@@ -1,10 +1,10 @@
 ﻿@model TodoViewModel
 
 <a asp-controller="Home" asp-action="Index"
-   asp-route-page="@(Model.pageNumber - 1)">
+   asp-route-page="@(Model.PageNumber - 1)">
    [PREVIOUS]
 </a>
 <a asp-controller="Home" asp-action="Index"
-    asp-route-page="@(Model.pageNumber + 1)">
+    asp-route-page="@(Model.PageNumber + 1)">
     [NEXT]
  </a>

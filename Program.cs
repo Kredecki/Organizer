@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Organizer.Data;
+using Organizer.Data.Repositories;
+using Organizer.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite(
     builder.Configuration.GetConnectionString("DefaultConnection")
 ));
+
+builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<IHomeRepository, HomeRepository>();
 
 var app = builder.Build();
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Organizer.Models;
-using Microsoft.Data.Sqlite;
 using Organizer.Models.ViewModels;
 using Organizer.Data;
+using Organizer.Services;
 
 namespace Organizer.Controllers
 {
@@ -10,39 +10,40 @@ namespace Organizer.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
+
+        private readonly IHomeService _homeService;
         
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IHomeService homeService)
         {
             _logger = logger;
             _db = db;
+            _homeService = homeService;
         }
-        public IActionResult Index(int page)
+        
+        public async Task<IActionResult> Index(int page)
         {
-            var todoListViewModel = GetAllTodos(page);
+            var todoListViewModel = await GetAllTodos(page);
             return View(todoListViewModel);
         }
 
         //SELECT
-        internal TodoViewModel GetAllTodos(int page)
+        internal async Task<TodoViewModel> GetAllTodos(int page)
         {
             int itemsOnPage = 5;
 
-            int todoListCount = _db.TodoItem.Count();
-            int pages = todoListCount / itemsOnPage;
+            int todoListCount = await _homeService.CountAllTodos();
 
-            if (page == 0) page = 1;
+            int pageNumber = _homeService.PageService(page, todoListCount, itemsOnPage);
 
-            if (page > pages) page = pages;
+            List<TodoItem> todoList = await _homeService.GetAllTodosList(page, itemsOnPage);
 
-            int PageNumber = page;
-
-            List<TodoItem> todoList = _db.TodoItem.Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToList();
-            
-            return new TodoViewModel
+            TodoViewModel model = new TodoViewModel
             {
                 TodoList = todoList,
-                pageNumber = PageNumber
+                PageNumber = pageNumber
             };
+
+            return model;
         }
 
         //INSERT
@@ -52,13 +53,14 @@ namespace Organizer.Controllers
             _db.SaveChanges();
             return Redirect("https://localhost:7249/");
         }
-
+        
         //UPDATE
+        //TODO: Naprawić PopulateForm
         [HttpGet]
-        public JsonResult PopulateForm(int id)
+        public async Task<JsonResult> PopulateForm(int id)
         {
-            var todo = _db.TodoItem.FirstOrDefault(t => t.Id == id);
-            return Json(todo);
+            var todoItem = await _homeService.GetTodoById(id);
+            return Json(todoItem);
         }
 
         public RedirectResult Update(TodoItem todo)
