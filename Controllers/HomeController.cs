@@ -16,20 +16,32 @@ namespace Organizer.Controllers
             _logger = logger;
             _db = db;
         }
-        public IActionResult Index()
+        public IActionResult Index(int page)
         {
-            var todoListViewModel = GetAllTodos();
+            var todoListViewModel = GetAllTodos(page);
             return View(todoListViewModel);
         }
 
         //SELECT
-        internal TodoViewModel GetAllTodos()
+        internal TodoViewModel GetAllTodos(int page)
         {
-            List<TodoItem> todoList = _db.TodoItem.ToList();
+            int itemsOnPage = 5;
 
+            int todoListCount = _db.TodoItem.Count();
+            int pages = todoListCount / itemsOnPage;
+
+            if (page == 0) page = 1;
+
+            if (page > pages) page = pages;
+
+            int PageNumber = page;
+
+            List<TodoItem> todoList = _db.TodoItem.Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToList();
+            
             return new TodoViewModel
             {
-                TodoList = todoList
+                TodoList = todoList,
+                pageNumber = PageNumber
             };
         }
 
@@ -82,7 +94,5 @@ namespace Organizer.Controllers
 
             return Json(new { });
         }
-        
-        
     }
 }

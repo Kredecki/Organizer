@@ -1,0 +1,10 @@
+
+*.vsidx
+.vs/Organizer/v17/.suo
+bin/Debug/net6.0/Organizer.dll
+bin/Debug/net6.0/Organizer.pdb
+db.sqlite
+obj/Debug/net6.0/Organizer.dll
+obj/Debug/net6.0/Organizer.pdb
+obj/Debug/net6.0/ref/Organizer.dll
+obj/Debug/net6.0/refint/Organizer.dll
