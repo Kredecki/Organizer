@@ -9,9 +9,9 @@ namespace Organizer.Data.Repositories
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
         Task<TodoItem> GetTodoById(int id);
-        void AddTodoItem(TodoItem todo);
-        void UpdateTodoItem(TodoItem todo);
-        void DeleteTodoItem(TodoItem todo);
+        Task AddTodoItem(TodoItem todo);
+        Task UpdateTodoItem(TodoItem todo);
+        Task DeleteTodoItem(TodoItem todo);
     }
 
     public class HomeRepository : IHomeRepository
@@ -25,43 +25,77 @@ namespace Organizer.Data.Repositories
 
         public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage)
         {
-            var todos = await _db.TodoItem
-                .Skip((page - 1) * itemsOnPage)
-                .Take(itemsOnPage)
-                .ToListAsync();
-
-            return todos;
+            try 
+            { 
+                return await _db.TodoItem.Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to get all todo items from database", ex);
+            }
         }
         
         public async Task<int> CountAllTodos()
         {
-            var count = await _db.TodoItem.CountAsync();
-            
-            return count;
+            try
+            {
+                return await _db.TodoItem.CountAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to count all todo items from database", ex);
+            }
         }
 
         public async Task<TodoItem> GetTodoById(int id)
         {
-            var result = await _db.TodoItem.FirstOrDefaultAsync(x => x.Id == id);
-            return result;
+            try
+            {
+                return await _db.TodoItem.FindAsync(id);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to get todo items from database", ex);
+            }
         }
 
-        public void AddTodoItem(TodoItem todo)
+        public async Task AddTodoItem(TodoItem todo)
         {
-            _db.TodoItem.Add(todo);
-            _db.SaveChanges();
+            try
+            {
+                await _db.TodoItem.AddAsync(todo);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to add todo item to database", ex);
+            }
         }
 
-        public async void UpdateTodoItem(TodoItem todo)
+        public async Task UpdateTodoItem(TodoItem todo)
         {
-            _db.TodoItem.Update(todo);
-            await _db.SaveChangesAsync();
+            try
+            {
+                _db.TodoItem.Update(todo);
+                await _db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to update todo item into database", ex);
+            }
         }
 
-        public void DeleteTodoItem(TodoItem todo)
+        public async Task DeleteTodoItem(TodoItem todo)
         {
-            _db.TodoItem.Remove(todo);
-            _db.SaveChanges();
+            try
+            {
+                _db.TodoItem.Remove(todo);
+                await _db.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to delete todo item from database", ex);
+            }
         }
     }
 }

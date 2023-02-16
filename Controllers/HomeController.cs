@@ -3,6 +3,7 @@ using Organizer.Models;
 using Organizer.Models.ViewModels;
 using Organizer.Data;
 using Organizer.Services;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Organizer.Controllers
 {
@@ -50,10 +51,18 @@ namespace Organizer.Controllers
         }
 
         //INSERT
-        public RedirectResult Insert(TodoItem todo, int page)
+        public async Task<IActionResult> Insert(TodoItem todo, int page)
         {
-            _homeService.AddTodoItem(todo);  
-            return Redirect($"https://localhost:7249/?page={page}");
+            try
+            {
+                await _homeService.AddTodoItem(todo);
+                return RedirectToAction("Index", new { page });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add todo item");
+                return View("Error");
+            }
         }
         
         //UPDATE
@@ -65,20 +74,30 @@ namespace Organizer.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Update(TodoItem todo)
+        public async Task<IActionResult> Update(TodoItem todo, int PageNumber)
         {
-            var existingTodoTask = _homeService.GetTodoById(todo.Id);
-            var existingTodo = await existingTodoTask;
-
-            if (existingTodo == null)
+            try
             {
-                return NotFound();
+                int page = PageNumber;
+                
+                var existingTodoTask = _homeService.GetTodoById(todo.Id);
+                var existingTodo = await existingTodoTask;
+
+                if (existingTodo == null)
+                {
+                    return NotFound();
+                }
+                
+                existingTodo.Name = todo.Name;
+                _homeService.UpdateTodoItem(existingTodo);
+
+                return RedirectToAction("Index", new { page });
             }
-
-            existingTodo.Name = todo.Name;
-            _homeService.UpdateTodoItem(existingTodo);
-
-            return RedirectToAction("Index", "Home");
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update todo item");
+                return View("Error");
+            }
         }
 
         //DELETE
