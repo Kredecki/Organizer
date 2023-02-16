@@ -15,6 +15,7 @@ namespace Organizer.Services
         Task<TodoItem> GetTodoById(int id);
         void AddTodoItem(TodoItem todo);
         void UpdateTodoItem(TodoItem todo);
+        void DeleteTodoItem(TodoItem todo);
     }
 
     public class HomeService : IHomeService
@@ -66,6 +67,11 @@ namespace Organizer.Services
         public void UpdateTodoItem(TodoItem todo)
         {
             _homeRepository.UpdateTodoItem(todo);
+        }
+        
+        public void DeleteTodoItem(TodoItem todo)
+        {
+            _homeRepository.DeleteTodoItem(todo);
         }
     }
 }

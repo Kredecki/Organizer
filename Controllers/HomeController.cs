@@ -83,20 +83,19 @@ namespace Organizer.Controllers
 
         //DELETE
         [HttpPost]
-        public JsonResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todoToDelete = _db.TodoItem.FirstOrDefault(t => t.Id == id);
-            if (todoToDelete != null)
+            var existingTodoTask = _homeService.GetTodoById(id);
+            var todo = await existingTodoTask;
+
+            if (todo == null)
             {
-                _db.TodoItem.Remove(todoToDelete);
-                _db.SaveChanges();
-            }
-            else
-            {
-                // handle error
+                return NotFound();
             }
 
-            return Json(new { });
+            _homeService.DeleteTodoItem(todo);
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

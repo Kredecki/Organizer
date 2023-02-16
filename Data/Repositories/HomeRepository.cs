@@ -11,6 +11,7 @@ namespace Organizer.Data.Repositories
         Task<TodoItem> GetTodoById(int id);
         void AddTodoItem(TodoItem todo);
         void UpdateTodoItem(TodoItem todo);
+        void DeleteTodoItem(TodoItem todo);
     }
 
     public class HomeRepository : IHomeRepository
@@ -55,6 +56,12 @@ namespace Organizer.Data.Repositories
         {
             _db.TodoItem.Update(todo);
             await _db.SaveChangesAsync();
+        }
+
+        public void DeleteTodoItem(TodoItem todo)
+        {
+            _db.TodoItem.Remove(todo);
+            _db.SaveChanges();
         }
     }
 }
