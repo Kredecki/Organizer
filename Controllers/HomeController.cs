@@ -63,21 +63,22 @@ namespace Organizer.Controllers
             var todoItem = await _homeService.GetTodoById(id);
             return new JsonResult(todoItem);
         }
-
-        public RedirectResult Update(TodoItem todo)
+        
+        [HttpPost]
+        public async Task<IActionResult> Update(TodoItem todo)
         {
-            var existingTodo = _db.TodoItem.FirstOrDefault(t => t.Id == todo.Id);
-            if (existingTodo != null)
+            var existingTodoTask = _homeService.GetTodoById(todo.Id);
+            var existingTodo = await existingTodoTask;
+
+            if (existingTodo == null)
             {
-                existingTodo.Name = todo.Name;
-                _db.SaveChanges();
+                return NotFound();
             }
-            else
-            {
-                // handle error
-            }
-            
-            return Redirect("https://localhost:7249/");
+
+            existingTodo.Name = todo.Name;
+            _homeService.UpdateTodoItem(existingTodo);
+
+            return RedirectToAction("Index", "Home");
         }
 
         //DELETE
