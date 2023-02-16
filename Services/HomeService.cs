@@ -12,7 +12,7 @@ namespace Organizer.Services
         Task<int> CountAllTodos();
         int PageService(int page, int todoListCount, int itemsOnPage);
         int GetAllPages(int todoListCount, int itemsOnPage);
-        Task<string> GetTodoById(int id);
+        Task<TodoItem> GetTodoById(int id);
         bool AddTodoItem(TodoItem todo);
     }
 
@@ -51,10 +51,10 @@ namespace Organizer.Services
             return pages+1;
         }
 
-        public async Task<string> GetTodoById(int id)
+        public async Task<TodoItem> GetTodoById(int id)
         {
             var result = await _homeRepository.GetTodoById(id);
-            return result.ToString();
+            return result;
         }
         
         public bool AddTodoItem(TodoItem todo)

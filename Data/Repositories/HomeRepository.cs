@@ -8,7 +8,7 @@ namespace Organizer.Data.Repositories
     {
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
-        Task<string> GetTodoById(int id);
+        Task<TodoItem> GetTodoById(int id);
         bool AddTodoItem(TodoItem todo);
     }
 
@@ -38,10 +38,10 @@ namespace Organizer.Data.Repositories
             return count;
         }
 
-        public async Task<string> GetTodoById(int id)
+        public async Task<TodoItem> GetTodoById(int id)
         {
             var result = await _db.TodoItem.FindAsync(id);
-            return result.Name.ToString();
+            return result;
         }
 
         public bool AddTodoItem(TodoItem todo)

@@ -57,12 +57,11 @@ namespace Organizer.Controllers
         }
         
         //UPDATE
-        //TODO: Naprawić PopulateForm
         [HttpGet]
         public async Task<JsonResult> PopulateForm(int id)
         {
             var todoItem = await _homeService.GetTodoById(id);
-            return Json(todoItem);
+            return new JsonResult(todoItem);
         }
 
         public RedirectResult Update(TodoItem todo)
@@ -77,7 +76,7 @@ namespace Organizer.Controllers
             {
                 // handle error
             }
-
+            
             return Redirect("https://localhost:7249/");
         }
 
