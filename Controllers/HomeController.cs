@@ -52,8 +52,7 @@ namespace Organizer.Controllers
         //INSERT
         public RedirectResult Insert(TodoItem todo, int page)
         {
-            _db.TodoItem.Add(todo);
-            _db.SaveChanges();
+            _homeService.AddTodoItem(todo);  
             return Redirect($"https://localhost:7249/?page={page}");
         }
         

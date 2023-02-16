@@ -9,6 +9,7 @@ namespace Organizer.Data.Repositories
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
         Task<string> GetTodoById(int id);
+        bool AddTodoItem(TodoItem todo);
     }
 
     public class HomeRepository : IHomeRepository
@@ -41,6 +42,21 @@ namespace Organizer.Data.Repositories
         {
             var result = await _db.TodoItem.FindAsync(id);
             return result.Name.ToString();
+        }
+
+        public bool AddTodoItem(TodoItem todo)
+        {
+            bool result = false;
+            
+            try
+            {
+                _db.TodoItem.Add(todo);
+                _db.SaveChanges();
+                result = true;
+            } 
+            catch(Exception ex) { }
+
+            return result;
         }
     }
 }

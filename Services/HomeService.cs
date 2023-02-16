@@ -13,6 +13,7 @@ namespace Organizer.Services
         int PageService(int page, int todoListCount, int itemsOnPage);
         int GetAllPages(int todoListCount, int itemsOnPage);
         Task<string> GetTodoById(int id);
+        bool AddTodoItem(TodoItem todo);
     }
 
     public class HomeService : IHomeService
@@ -54,6 +55,11 @@ namespace Organizer.Services
         {
             var result = await _homeRepository.GetTodoById(id);
             return result.ToString();
+        }
+        
+        public bool AddTodoItem(TodoItem todo)
+        {
+            return _homeRepository.AddTodoItem(todo);
         }
     }
 }
