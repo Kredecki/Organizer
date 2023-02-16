@@ -7,5 +7,6 @@ namespace Organizer.Models.ViewModels
         public List<TodoItem>? TodoList { get; set; }
         public TodoItem? Todo { get; set; }
         public int? PageNumber { get; set; }
+        public int? PageCount { get; set; }
     }
 }

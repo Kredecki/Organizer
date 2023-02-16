@@ -35,23 +35,26 @@ namespace Organizer.Controllers
 
             int pageNumber = _homeService.PageService(page, todoListCount, itemsOnPage);
 
+            int pageCount = _homeService.GetAllPages(todoListCount, itemsOnPage);
+
             List<TodoItem> todoList = await _homeService.GetAllTodosList(page, itemsOnPage);
 
             TodoViewModel model = new TodoViewModel
             {
                 TodoList = todoList,
-                PageNumber = pageNumber
+                PageNumber = pageNumber,
+                PageCount = pageCount
             };
 
             return model;
         }
 
         //INSERT
-        public RedirectResult Insert(TodoItem todo)
+        public RedirectResult Insert(TodoItem todo, int page)
         {
             _db.TodoItem.Add(todo);
             _db.SaveChanges();
-            return Redirect("https://localhost:7249/");
+            return Redirect($"https://localhost:7249/?page={page}");
         }
         
         //UPDATE

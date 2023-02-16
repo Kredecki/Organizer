@@ -11,6 +11,7 @@ namespace Organizer.Services
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
         int PageService(int page, int todoListCount, int itemsOnPage);
+        int GetAllPages(int todoListCount, int itemsOnPage);
         Task<string> GetTodoById(int id);
     }
 
@@ -34,12 +35,19 @@ namespace Organizer.Services
         }
 
         public int PageService(int page, int todoListCount, int itemsOnPage)
-        {
+        {       
             int pages = (int)Math.Ceiling((double)todoListCount / itemsOnPage);
             if (page <= 0) page = 1;
-            if (page > pages) page = pages;
+            if (page >= pages) page = pages;
 
             return page;
+        }
+
+        public int GetAllPages(int todoListCount, int itemsOnPage)
+        {
+            int pages = (int)Math.Ceiling((double)todoListCount / itemsOnPage);
+
+            return pages+1;
         }
 
         public async Task<string> GetTodoById(int id)
