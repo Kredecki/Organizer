@@ -9,6 +9,7 @@ namespace Organizer.Services
 {
     public interface IHomeService
     {
+        void HandleException(Exception ex, string errorMessage);
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
         int PageService(int page, int todoListCount, int itemsOnPage);
@@ -27,7 +28,19 @@ namespace Organizer.Services
         {
             _homeRepository = homeRepository;
         }
-        
+
+        public void HandleException(Exception ex, string errorMessage)
+        {
+            if (ex is InvalidOperationException || ex is SqlException)
+            {
+                throw new ArgumentNullException(errorMessage, ex);
+            }
+            else
+            {
+                throw new ArgumentNullException("An error occurred while performing the database operation", ex);
+            }
+        }
+
         public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage)
         {
             try
@@ -36,7 +49,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to get all todo items from database");
+                HandleException(ex, "Failed to get all todo items from database");
                 throw;
             }
         }
@@ -49,7 +62,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to count all todo items from database");
+                HandleException(ex, "Failed to count all todo items from database");
                 throw;
             }
         }
@@ -66,7 +79,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to calc todo items from database");
+                HandleException(ex, "Failed to calc todo items from database");
                 throw;
             }
         }
@@ -79,7 +92,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to count todo items from database");
+                HandleException(ex, "Failed to count todo items from database");
                 throw;
             }
         }
@@ -92,7 +105,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to get todo item from database");
+                HandleException(ex, "Failed to get todo item from database");
                 throw;
             }
         }
@@ -105,7 +118,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to add todo item to database");
+                HandleException(ex, "Failed to add todo item to database");
                 throw;
             }
         }
@@ -118,7 +131,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to update todo item into database");
+                HandleException(ex, "Failed to update todo item into database");
                 throw;
             }
         }
@@ -131,7 +144,7 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                _homeRepository.HandleException(ex, "Failed to delete todo item from database");
+                HandleException(ex, "Failed to delete todo item from database");
                 throw;
             }
         }

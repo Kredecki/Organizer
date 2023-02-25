@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Organizer.Models;
+using Organizer.Services;
 using System.Data.SqlClient;
 
 namespace Organizer.Data.Repositories
 {
     public interface IHomeRepository
     {
-        void HandleException(Exception ex, string errorMessage);
         Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
         Task<int> CountAllTodos();
         Task<TodoItem?> GetTodoById(int id);
@@ -19,22 +19,12 @@ namespace Organizer.Data.Repositories
     public class HomeRepository : IHomeRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly IHomeService _homeService;
 
-        public HomeRepository(ApplicationDbContext db)
+        public HomeRepository(ApplicationDbContext db, IHomeService homeService)
         {
             _db = db;
-        }
-
-        public void HandleException(Exception ex, string errorMessage)
-        {
-            if (ex is InvalidOperationException || ex is SqlException)
-            {
-                throw new ArgumentNullException(errorMessage, ex);
-            }
-            else
-            {
-                throw new ArgumentNullException("An error occurred while performing the database operation", ex);
-            }
+            _homeService = homeService;
         }
 
         public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage)
@@ -45,7 +35,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to get all todo items from database");
+                _homeService.HandleException(ex, "Failed to get all todo items from database");
                 throw;
             }
         }
@@ -58,7 +48,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to count all todo items from database");
+                _homeService.HandleException(ex, "Failed to count all todo items from database");
                 throw;
             }
         }
@@ -71,7 +61,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to get todo items from database");
+                _homeService.HandleException(ex, "Failed to get todo items from database");
                 throw;
             }
         }
@@ -85,7 +75,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to add todo item to database");
+                _homeService.HandleException(ex, "Failed to add todo item to database");
                 throw;
             }
         }
@@ -99,7 +89,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to update todo item into database");
+                _homeService.HandleException(ex, "Failed to update todo item into database");
                 throw;
             }
         }
@@ -113,7 +103,7 @@ namespace Organizer.Data.Repositories
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Failed to delete todo item from database");
+                _homeService.HandleException(ex, "Failed to delete todo item from database");
                 throw;
             }
         }
