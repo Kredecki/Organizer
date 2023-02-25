@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Organizer.Data.Repositories;
 using Organizer.Models;
 using Organizer.Models.ViewModels;
+using System.Data.SqlClient;
 
 namespace Organizer.Services
 {
@@ -12,7 +13,7 @@ namespace Organizer.Services
         Task<int> CountAllTodos();
         int PageService(int page, int todoListCount, int itemsOnPage);
         int GetAllPages(int todoListCount, int itemsOnPage);
-        Task<TodoItem> GetTodoById(int id);
+        Task<TodoItem?> GetTodoById(int id);
         Task AddTodoItem(TodoItem todo);
         Task UpdateTodoItem(TodoItem todo);
         Task DeleteTodoItem(TodoItem todo);
@@ -33,9 +34,10 @@ namespace Organizer.Services
             {
                 return await _homeRepository.GetAllTodosList(page, itemsOnPage);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to get all todo items from database", ex);
+                _homeRepository.HandleException(ex, "Failed to get all todo items from database");
+                throw;
             }
         }
 
@@ -45,12 +47,13 @@ namespace Organizer.Services
             {
                 return await _homeRepository.CountAllTodos();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to count all todo items from database", ex);
+                _homeRepository.HandleException(ex, "Failed to count all todo items from database");
+                throw;
             }
         }
-
+        
         public int PageService(int page, int todoListCount, int itemsOnPage)
         {
             try
@@ -61,9 +64,10 @@ namespace Organizer.Services
 
                 return page;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to calc todo items from database", ex);
+                _homeRepository.HandleException(ex, "Failed to calc todo items from database");
+                throw;
             }
         }
 
@@ -73,21 +77,23 @@ namespace Organizer.Services
             {
                 return (int)Math.Ceiling((double)todoListCount / itemsOnPage) + 1;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to count todo items from database", ex);
+                _homeRepository.HandleException(ex, "Failed to count todo items from database");
+                throw;
             }
         }
-
-        public async Task<TodoItem> GetTodoById(int id)
+        
+        public async Task<TodoItem?> GetTodoById(int id)
         {
             try
             {
                 return await _homeRepository.GetTodoById(id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception("Failed to get todo item from database", ex);
+                _homeRepository.HandleException(ex, "Failed to get todo item from database");
+                throw;
             }
         }
         
@@ -99,7 +105,8 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to add todo item to database", ex);
+                _homeRepository.HandleException(ex, "Failed to add todo item to database");
+                throw;
             }
         }
 
@@ -111,7 +118,8 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to update todo item into database", ex);
+                _homeRepository.HandleException(ex, "Failed to update todo item into database");
+                throw;
             }
         }
         
@@ -123,7 +131,8 @@ namespace Organizer.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to delete todo item from database", ex);
+                _homeRepository.HandleException(ex, "Failed to delete todo item from database");
+                throw;
             }
         }
     }

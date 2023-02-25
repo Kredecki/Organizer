@@ -10,13 +10,13 @@ namespace Organizer.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            //Auto-generated
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            //Auto-generated
         }
     }
 }

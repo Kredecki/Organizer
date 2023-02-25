@@ -10,14 +10,12 @@ namespace Organizer.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _db;
 
         private readonly IHomeService _homeService;
         
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IHomeService homeService)
+        public HomeController(ILogger<HomeController> logger, IHomeService homeService)
         {
             _logger = logger;
-            _db = db;
             _homeService = homeService;
         }
         
@@ -89,7 +87,7 @@ namespace Organizer.Controllers
                 }
                 
                 existingTodo.Name = todo.Name;
-                _homeService.UpdateTodoItem(existingTodo);
+                await _homeService.UpdateTodoItem(existingTodo);
 
                 return RedirectToAction("Index", new { page });
             }
@@ -112,7 +110,7 @@ namespace Organizer.Controllers
                 return NotFound();
             }
 
-            _homeService.DeleteTodoItem(todo);
+            await _homeService.DeleteTodoItem(todo);
 
             return RedirectToAction("Index", "Home");
         }
