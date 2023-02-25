@@ -26,7 +26,7 @@ namespace Organizer.Controllers
         }
 
         //SELECT
-        internal async Task<TodoViewModel> GetAllTodos(int page)
+        public async Task<TodoViewModel> GetAllTodos(int page)
         {
             int itemsOnPage = 5;
 
@@ -44,7 +44,7 @@ namespace Organizer.Controllers
                 PageNumber = pageNumber,
                 PageCount = pageCount
             };
-
+            
             return model;
         }
 
