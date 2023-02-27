@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Organizer.Data.Repositories;
+﻿using Organizer.Data.Repositories;
 using Organizer.Models;
-using Organizer.Models.ViewModels;
 using System.Data.SqlClient;
 
 namespace Organizer.Services

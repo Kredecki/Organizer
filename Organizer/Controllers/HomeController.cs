@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Organizer.Models;
 using Organizer.Models.ViewModels;
-using Organizer.Data;
 using Organizer.Services;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Organizer.Controllers
 {
