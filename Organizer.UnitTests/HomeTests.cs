@@ -108,6 +108,8 @@ namespace Organizer.UnitTests
             _homeServiceMock?.Verify(x => x.AddTodoItem(todo), Times.Once);
         }
 
+        // UPDATE
+
         [Test]
         public async Task PopulateForm_WhenCalledWithValidId_ReturnsJsonResult()
         {
@@ -176,6 +178,8 @@ namespace Organizer.UnitTests
             Assert.IsNotNull(result);
             Assert.AreEqual("Error", result?.ViewName);
         }
+
+        // DELETE
 
         [Test]
         public async Task Delete_WhenCalledWithValidId_ReturnsRedirectToActionResult()
