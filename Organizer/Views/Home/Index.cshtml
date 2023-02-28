@@ -6,6 +6,7 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Project</th>
                 </tr>
             </thead>
             <tbody>
@@ -14,6 +15,7 @@
                     <tr>
                         <td class="todos-column">@t.Id</td>
                         <td class="todos-column">@t.Name</td>
+                        <td class="todos-column">@t.Project.Name</td>
                         <td class="buttons-column">
                             <input type="submit" value="Delete" onClick="deleteTodo(@t.Id)" />
                             <input type="submit" value="Update" onClick="populateForm(@t.Id)" />

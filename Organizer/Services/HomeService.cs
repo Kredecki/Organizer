@@ -12,9 +12,10 @@ namespace Organizer.Services
         int PageService(int page, int todoListCount, int itemsOnPage);
         int GetAllPages(int todoListCount, int itemsOnPage);
         Task<TodoItem?> GetTodoById(int id);
-        Task AddTodoItem(TodoItem todo);
-        Task UpdateTodoItem(TodoItem todo);
+        Task AddTodoItem(TodoItem todo, int ProjectType);
+        Task UpdateTodoItem(TodoItem todo, int ProjectType);
         Task DeleteTodoItem(TodoItem todo);
+        Task<List<Project>> GetProjects();
     }
 
     public class HomeService : IHomeService
@@ -107,10 +108,11 @@ namespace Organizer.Services
             }
         }
         
-        public async Task AddTodoItem(TodoItem todo)
+        public async Task AddTodoItem(TodoItem todo, int ProjectType)
         {
             try
             {
+                todo.ProjectId = ProjectType;
                 await _homeRepository.AddTodoItem(todo);
             }
             catch (Exception ex)
@@ -120,10 +122,11 @@ namespace Organizer.Services
             }
         }
 
-        public async Task UpdateTodoItem(TodoItem todo)
+        public async Task UpdateTodoItem(TodoItem todo, int ProjectType)
         {
             try
             {
+                todo.ProjectId = ProjectType;
                 await _homeRepository.UpdateTodoItem(todo);
             }
             catch (Exception ex)
@@ -142,6 +145,19 @@ namespace Organizer.Services
             catch (Exception ex)
             {
                 HandleException(ex, "Failed to delete todo item from database");
+                throw;
+            }
+        }
+
+        public async Task<List<Project>> GetProjects()
+        {
+            try
+            {
+                return await _homeRepository.GetProjects();
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Failed to load projects");
                 throw;
             }
         }

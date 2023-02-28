@@ -14,6 +14,7 @@ namespace Organizer.Data.Repositories
         Task AddTodoItem(TodoItem todo);
         Task UpdateTodoItem(TodoItem todo);
         Task DeleteTodoItem(TodoItem todo);
+        Task<List<Project>> GetProjects();
     }
 
     public class HomeRepository : IHomeRepository
@@ -27,7 +28,7 @@ namespace Organizer.Data.Repositories
 
         public async Task<List<TodoItem>> GetTodosList(int page, int itemsOnPage, string searchString)
         {
-            return await _db.TodoItem.Where(s => s.Name!.Contains(searchString)).Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToListAsync();
+            return await _db.TodoItem.Include(x => x.Project).Where(s => s.Name!.Contains(searchString)).Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToListAsync();
         }
 
         public async Task<int> CountTodos(string searchString)
@@ -56,6 +57,11 @@ namespace Organizer.Data.Repositories
         {
             _db.TodoItem.Remove(todo);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<List<Project>> GetProjects()
+        {
+            return await _db.Projects.ToListAsync();
         }
     }
 }

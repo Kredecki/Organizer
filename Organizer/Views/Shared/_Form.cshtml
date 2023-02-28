@@ -8,5 +8,11 @@
         <input type="hidden" asp-for="PageNumber" value="@Model.PageNumber" />
         <input type="hidden" asp-for="SearchString" value="@Model.SearchString" />
         <span asp-validation-for="Todo.Name"></span>
-        <input type="submit" id="form-button" value="Add Todo" />
+        <select id="ProjectType" name="ProjectType">
+            @foreach (var p in Model.Projects)
+            {
+                <option value="@p.Id">@p.Name</option>
+            }
+        </select>
+    <input type="submit" id="form-button" value="Add Todo" />
 </form>

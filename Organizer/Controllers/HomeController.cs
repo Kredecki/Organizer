@@ -37,21 +37,24 @@ namespace Organizer.Controllers
 
             List<TodoItem> todoList = await _homeService.GetTodosList(page, itemsOnPage, searchString);
 
+            List<Project> projects = await _homeService.GetProjects();
+
             TodoViewModel model = new TodoViewModel
             {
                 TodoList = todoList,
                 PageNumber = pageNumber,
                 PageCount = pageCount,
-                SearchString = searchString
+                SearchString = searchString,
+                Projects = projects
             };
             
             return model;
         }
 
         // INSERT
-        public async Task<IActionResult> Insert(TodoItem todo, int page, string searchString)
+        public async Task<IActionResult> Insert(TodoItem todo, int page, string searchString, int ProjectType)
         {
-            await _homeService.AddTodoItem(todo);
+            await _homeService.AddTodoItem(todo, ProjectType);
             return RedirectToAction("Index", new { page, searchString });
         }
         
@@ -64,7 +67,7 @@ namespace Organizer.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Update(TodoItem todo, int PageNumber, string searchString)
+        public async Task<IActionResult> Update(TodoItem todo, int PageNumber, string searchString, int ProjectType)
         {
             try
             {
@@ -79,7 +82,7 @@ namespace Organizer.Controllers
                 }
                 
                 existingTodo.Name = todo.Name;
-                await _homeService.UpdateTodoItem(existingTodo);
+                await _homeService.UpdateTodoItem(existingTodo, ProjectType);
 
                 return RedirectToAction("Index", new { page, searchString });
             }
