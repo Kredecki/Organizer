@@ -9,5 +9,6 @@ namespace Organizer.Models.ViewModels
         public int? PageNumber { get; set; }
         public int? PageCount { get; set; }
         public string? SearchString { get; set; }
+        public List<Project>? Projects { get; set; }
     }
 }
