@@ -7,8 +7,8 @@ namespace Organizer.Services
     public interface IHomeService
     {
         void HandleException(Exception ex, string errorMessage);
-        Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage, string searchString);
-        Task<int> CountAllTodos(string searchString);
+        Task<List<TodoItem>> GetTodosList(int page, int itemsOnPage, string searchString);
+        Task<int> CountTodos(string searchString);
         int PageService(int page, int todoListCount, int itemsOnPage);
         int GetAllPages(int todoListCount, int itemsOnPage);
         Task<TodoItem?> GetTodoById(int id);
@@ -38,11 +38,11 @@ namespace Organizer.Services
             }
         }
 
-        public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage, string searchString)
+        public async Task<List<TodoItem>> GetTodosList(int page, int itemsOnPage, string searchString)
         {
             try
             {
-                return await _homeRepository.GetAllTodosList(page, itemsOnPage, searchString);
+                return await _homeRepository.GetTodosList(page, itemsOnPage, searchString);
             }
             catch (Exception ex)
             {
@@ -51,11 +51,11 @@ namespace Organizer.Services
             }
         }
 
-        public async Task<int> CountAllTodos(string searchString)
+        public async Task<int> CountTodos(string searchString)
         {
             try
             {
-                return await _homeRepository.CountAllTodos(searchString);
+                return await _homeRepository.CountTodos(searchString);
             }
             catch (Exception ex)
             {

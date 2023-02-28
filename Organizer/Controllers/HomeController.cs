@@ -19,23 +19,23 @@ namespace Organizer.Controllers
         
         public async Task<IActionResult> Index(int page, string searchString)
         {
-            var todoListViewModel = await GetAllTodos(page, searchString);
+            var todoListViewModel = await GetTodos(page, searchString);
             return View(todoListViewModel);
         }
 
         // SELECT
-        public async Task<TodoViewModel> GetAllTodos(int page, string searchString)
+        public async Task<TodoViewModel> GetTodos(int page, string searchString)
         {
             if (searchString == null) searchString = "";
             int itemsOnPage = 5;
 
-            int todoListCount = await _homeService.CountAllTodos(searchString);
+            int todoListCount = await _homeService.CountTodos(searchString);
 
             int pageNumber = _homeService.PageService(page, todoListCount, itemsOnPage);
 
             int pageCount = _homeService.GetAllPages(todoListCount, itemsOnPage);
 
-            List<TodoItem> todoList = await _homeService.GetAllTodosList(page, itemsOnPage, searchString);
+            List<TodoItem> todoList = await _homeService.GetTodosList(page, itemsOnPage, searchString);
 
             TodoViewModel model = new TodoViewModel
             {
