@@ -26,10 +26,10 @@ namespace Organizer.UnitTests
         public async Task Index_ReturnsViewResult_WhenCalled()
         {
             // Arrange
-            _homeServiceMock?.Setup(x => x.CountAllTodos("")).ReturnsAsync(10);
+            _homeServiceMock?.Setup(x => x.CountTodos("")).ReturnsAsync(10);
             _homeServiceMock?.Setup(x => x.GetAllPages(10, 5)).Returns(2);
             _homeServiceMock?.Setup(x => x.PageService(1, 10, 5)).Returns(1);
-            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5, ""))
+            _homeServiceMock?.Setup(x => x.GetTodosList(1, 5, ""))
                        .ReturnsAsync(new List<TodoItem>
                        {
                    new TodoItem {Id = 1, Name = "Zrobić zakupy"},
@@ -51,10 +51,10 @@ namespace Organizer.UnitTests
         public async Task GetAllTodos_ReturnsCorrectViewModel()
         {
             // Arrange
-            _homeServiceMock?.Setup(x => x.CountAllTodos("")).ReturnsAsync(10);
+            _homeServiceMock?.Setup(x => x.CountTodos("")).ReturnsAsync(10);
             _homeServiceMock?.Setup(x => x.GetAllPages(10, 5)).Returns(2);
             _homeServiceMock?.Setup(x => x.PageService(1, 10, 5)).Returns(1);
-            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5, ""))
+            _homeServiceMock?.Setup(x => x.GetTodosList(1, 5, ""))
                        .ReturnsAsync(new List<TodoItem>
                        {
                    new TodoItem {Id = 1, Name = "Zrobić zakupy"},
@@ -63,7 +63,7 @@ namespace Organizer.UnitTests
                        });
 
             // Act
-            var result = await _controller.GetAllTodos(1, "");
+            var result = await _controller.GetTodos(1, "");
 
             // Assert
             Assert.IsNotNull(result);
