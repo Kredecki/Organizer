@@ -26,10 +26,10 @@ namespace Organizer.UnitTests
         public async Task Index_ReturnsViewResult_WhenCalled()
         {
             // Arrange
-            _homeServiceMock?.Setup(x => x.CountAllTodos()).ReturnsAsync(10);
+            _homeServiceMock?.Setup(x => x.CountAllTodos("")).ReturnsAsync(10);
             _homeServiceMock?.Setup(x => x.GetAllPages(10, 5)).Returns(2);
             _homeServiceMock?.Setup(x => x.PageService(1, 10, 5)).Returns(1);
-            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5))
+            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5, ""))
                        .ReturnsAsync(new List<TodoItem>
                        {
                    new TodoItem {Id = 1, Name = "Zrobić zakupy"},
@@ -38,7 +38,7 @@ namespace Organizer.UnitTests
                        });
 
             // Act
-            var result = await _controller.Index(1);
+            var result = await _controller.Index(1, "");
 
             // Assert
             Assert.IsNotNull(result);
@@ -51,10 +51,10 @@ namespace Organizer.UnitTests
         public async Task GetAllTodos_ReturnsCorrectViewModel()
         {
             // Arrange
-            _homeServiceMock?.Setup(x => x.CountAllTodos()).ReturnsAsync(10);
+            _homeServiceMock?.Setup(x => x.CountAllTodos("")).ReturnsAsync(10);
             _homeServiceMock?.Setup(x => x.GetAllPages(10, 5)).Returns(2);
             _homeServiceMock?.Setup(x => x.PageService(1, 10, 5)).Returns(1);
-            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5))
+            _homeServiceMock?.Setup(x => x.GetAllTodosList(1, 5, ""))
                        .ReturnsAsync(new List<TodoItem>
                        {
                    new TodoItem {Id = 1, Name = "Zrobić zakupy"},
@@ -63,7 +63,7 @@ namespace Organizer.UnitTests
                        });
 
             // Act
-            var result = await _controller.GetAllTodos(1);
+            var result = await _controller.GetAllTodos(1, "");
 
             // Assert
             Assert.IsNotNull(result);
@@ -86,7 +86,7 @@ namespace Organizer.UnitTests
             var page = 1;
 
             // Act
-            var result = await _controller.Insert(todoItem, page) as RedirectToActionResult;
+            var result = await _controller.Insert(todoItem, page, "") as RedirectToActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -102,7 +102,7 @@ namespace Organizer.UnitTests
             var page = 1;
 
             // Act
-            await _controller.Insert(todo, page);
+            await _controller.Insert(todo, page, "");
 
             // Assert
             _homeServiceMock?.Verify(x => x.AddTodoItem(todo), Times.Once);
@@ -138,7 +138,7 @@ namespace Organizer.UnitTests
             _homeServiceMock?.Setup(x => x.UpdateTodoItem(todo)).Returns(Task.CompletedTask);
 
             // Act
-            var result = await _controller.Update(todo, pageNumber) as RedirectToActionResult;
+            var result = await _controller.Update(todo, pageNumber, "") as RedirectToActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -156,7 +156,7 @@ namespace Organizer.UnitTests
             _homeServiceMock?.Setup(x => x.GetTodoById(todo.Id)).ReturnsAsync(() => null);
 
             // Act
-            var result = await _controller.Update(todo, pageNumber) as NotFoundResult;
+            var result = await _controller.Update(todo, pageNumber, "") as NotFoundResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -172,7 +172,7 @@ namespace Organizer.UnitTests
             _homeServiceMock?.Setup(x => x.GetTodoById(todo.Id)).ThrowsAsync(new Exception());
 
             // Act
-            var result = await _controller.Update(todo, pageNumber) as ViewResult;
+            var result = await _controller.Update(todo, pageNumber, "") as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);

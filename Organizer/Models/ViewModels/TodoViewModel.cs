@@ -8,5 +8,6 @@ namespace Organizer.Models.ViewModels
         public TodoItem? Todo { get; set; }
         public int? PageNumber { get; set; }
         public int? PageCount { get; set; }
+        public string? SearchString { get; set; }
     }
 }
