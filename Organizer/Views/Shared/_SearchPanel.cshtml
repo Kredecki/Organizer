@@ -1,0 +1,6 @@
+﻿<form asp-controller="Home" asp-action="Index" method="get" role="form" asp-route-page="@(Model.PageNumber)">
+    <p>
+        Search <input type="text" name="SearchString" value="@Model.SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>

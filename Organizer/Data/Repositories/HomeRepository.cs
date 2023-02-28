@@ -8,8 +8,8 @@ namespace Organizer.Data.Repositories
 {
     public interface IHomeRepository
     {
-        Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage);
-        Task<int> CountAllTodos();
+        Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage, string searchString);
+        Task<int> CountAllTodos(string searchString);
         Task<TodoItem?> GetTodoById(int id);
         Task AddTodoItem(TodoItem todo);
         Task UpdateTodoItem(TodoItem todo);
@@ -25,14 +25,14 @@ namespace Organizer.Data.Repositories
             _db = db;
         }
 
-        public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage)
+        public async Task<List<TodoItem>> GetAllTodosList(int page, int itemsOnPage, string searchString)
         {
-            return await _db.TodoItem.Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToListAsync();
+            return await _db.TodoItem.Where(s => s.Name!.Contains(searchString)).Skip((page - 1) * itemsOnPage).Take(itemsOnPage).ToListAsync();
         }
-        
-        public async Task<int> CountAllTodos()
+
+        public async Task<int> CountAllTodos(string searchString)
         {
-            return await _db.TodoItem.CountAsync();
+            return await _db.TodoItem.Where(s => s.Name!.Contains(searchString)).CountAsync();
         }
 
         public async Task<TodoItem?> GetTodoById(int id)

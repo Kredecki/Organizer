@@ -1,7 +1,8 @@
 ﻿@model TodoViewModel
 
 <a asp-controller="Home" asp-action="Index"
-   asp-route-page="@(Model.PageNumber - 1)">
+   asp-route-page="@(Model.PageNumber - 1)"
+   asp-route-searchString="@Model.SearchString">
    [PREVIOUS]
 </a>
 
@@ -13,6 +14,7 @@
 }
 
 <a asp-controller="Home" asp-action="Index"
-    asp-route-page="@(Model.PageNumber + 1)">
+    asp-route-page="@(Model.PageNumber + 1)"
+    asp-route-searchString="@Model.SearchString">
     [NEXT]
  </a>

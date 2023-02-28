@@ -17,40 +17,42 @@ namespace Organizer.Controllers
             _homeService = homeService;
         }
         
-        public async Task<IActionResult> Index(int page)
+        public async Task<IActionResult> Index(int page, string searchString)
         {
-            var todoListViewModel = await GetAllTodos(page);
+            var todoListViewModel = await GetAllTodos(page, searchString);
             return View(todoListViewModel);
         }
 
         // SELECT
-        public async Task<TodoViewModel> GetAllTodos(int page)
+        public async Task<TodoViewModel> GetAllTodos(int page, string searchString)
         {
+            if (searchString == null) searchString = "";
             int itemsOnPage = 5;
 
-            int todoListCount = await _homeService.CountAllTodos();
+            int todoListCount = await _homeService.CountAllTodos(searchString);
 
             int pageNumber = _homeService.PageService(page, todoListCount, itemsOnPage);
 
             int pageCount = _homeService.GetAllPages(todoListCount, itemsOnPage);
 
-            List<TodoItem> todoList = await _homeService.GetAllTodosList(page, itemsOnPage);
+            List<TodoItem> todoList = await _homeService.GetAllTodosList(page, itemsOnPage, searchString);
 
             TodoViewModel model = new TodoViewModel
             {
                 TodoList = todoList,
                 PageNumber = pageNumber,
-                PageCount = pageCount
+                PageCount = pageCount,
+                SearchString = searchString
             };
             
             return model;
         }
 
         // INSERT
-        public async Task<IActionResult> Insert(TodoItem todo, int page)
+        public async Task<IActionResult> Insert(TodoItem todo, int page, string searchString)
         {
             await _homeService.AddTodoItem(todo);
-            return RedirectToAction("Index", new { page });
+            return RedirectToAction("Index", new { page, searchString });
         }
         
         // UPDATE
@@ -62,7 +64,7 @@ namespace Organizer.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Update(TodoItem todo, int PageNumber)
+        public async Task<IActionResult> Update(TodoItem todo, int PageNumber, string searchString)
         {
             try
             {
@@ -79,7 +81,7 @@ namespace Organizer.Controllers
                 existingTodo.Name = todo.Name;
                 await _homeService.UpdateTodoItem(existingTodo);
 
-                return RedirectToAction("Index", new { page });
+                return RedirectToAction("Index", new { page, searchString });
             }
             catch(Exception ex)
             {
