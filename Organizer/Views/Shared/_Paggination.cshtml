@@ -1,20 +1,28 @@
 ﻿@model TodoViewModel
 
-<a asp-controller="Home" asp-action="Index"
-   asp-route-page="@(Model.PageNumber - 1)"
-   asp-route-searchString="@Model.SearchString">
-   [PREVIOUS]
-</a>
+<form asp-controller="Home" asp-action="Index">
+    <a asp-route-page="@(Model.PageNumber - 1)"
+       asp-route-searchString="@Model.SearchString"
+       asp-route-itemsOnPage="@Model.itemsOnPage">
+        [PREVIOUS]
+    </a>
 
-@{
-    if(Model.PageNumber + 1 >= Model.PageCount)
-    {
-        Model.PageNumber = Model.PageNumber - 1;
+    @{
+        if (Model.PageNumber + 1 >= Model.PageCount)
+        {
+            Model.PageNumber = Model.PageNumber - 1;
+        }
     }
-}
 
-<a asp-controller="Home" asp-action="Index"
-    asp-route-page="@(Model.PageNumber + 1)"
-    asp-route-searchString="@Model.SearchString">
-    [NEXT]
- </a>
+    <a asp-route-page="@(Model.PageNumber + 1)"
+       asp-route-searchString="@Model.SearchString"
+       asp-route-itemsOnPage="@Model.itemsOnPage">
+        [NEXT]
+    </a>
+    
+    <select asp-for="itemsOnPage"
+            asp-items="@new SelectList(new[] { 5, 10, 25, 50, 100 })"
+            onchange="javascript:this.form.submit()">
+    </select>
+    <input type="hidden" asp-for="SearchString" value="@Model.SearchString" />
+</form>

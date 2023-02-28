@@ -17,17 +17,18 @@ namespace Organizer.Controllers
             _homeService = homeService;
         }
         
-        public async Task<IActionResult> Index(int page, string searchString)
+        public async Task<IActionResult> Index(int page, string searchString, int itemsOnPage)
         {
-            var todoListViewModel = await GetTodos(page, searchString);
+            var todoListViewModel = await GetTodos(page, searchString, itemsOnPage);
             return View(todoListViewModel);
         }
 
         // SELECT
-        public async Task<TodoViewModel> GetTodos(int page, string searchString)
+        public async Task<TodoViewModel> GetTodos(int page, string searchString, int itemsOnPage)
         {
             if (searchString == null) searchString = "";
-            int itemsOnPage = 5;
+
+            if(itemsOnPage == 0) itemsOnPage = 5;
 
             int todoListCount = await _homeService.CountTodos(searchString);
 
@@ -45,17 +46,18 @@ namespace Organizer.Controllers
                 PageNumber = pageNumber,
                 PageCount = pageCount,
                 SearchString = searchString,
-                Projects = projects
+                Projects = projects,
+                itemsOnPage = itemsOnPage
             };
             
             return model;
         }
 
         // INSERT
-        public async Task<IActionResult> Insert(TodoItem todo, int page, string searchString, int ProjectType)
+        public async Task<IActionResult> Insert(TodoItem todo, int page, string searchString, int ProjectType, int itemsOnPage)
         {
             await _homeService.AddTodoItem(todo, ProjectType);
-            return RedirectToAction("Index", new { page, searchString });
+            return RedirectToAction("Index", new { page, searchString, itemsOnPage });
         }
         
         // UPDATE
@@ -67,7 +69,7 @@ namespace Organizer.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> Update(TodoItem todo, int PageNumber, string searchString, int ProjectType)
+        public async Task<IActionResult> Update(TodoItem todo, int PageNumber, string searchString, int ProjectType, int itemsOnPage)
         {
             try
             {
@@ -84,7 +86,7 @@ namespace Organizer.Controllers
                 existingTodo.Name = todo.Name;
                 await _homeService.UpdateTodoItem(existingTodo, ProjectType);
 
-                return RedirectToAction("Index", new { page, searchString });
+                return RedirectToAction("Index", new { page, searchString, itemsOnPage });
             }
             catch(Exception ex)
             {

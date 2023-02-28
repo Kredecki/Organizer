@@ -7,6 +7,7 @@
         <input asp-for="Todo.Name" />
         <input type="hidden" asp-for="PageNumber" value="@Model.PageNumber" />
         <input type="hidden" asp-for="SearchString" value="@Model.SearchString" />
+        <input type="hidden" asp-for="itemsOnPage" value="@Model.itemsOnPage" />
         <span asp-validation-for="Todo.Name"></span>
         <select id="ProjectType" name="ProjectType">
             @foreach (var p in Model.Projects)
