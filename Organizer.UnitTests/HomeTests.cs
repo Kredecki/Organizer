@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Organizer.Controllers;
 using Organizer.Models;
 using Organizer.Services;
+using static NUnit.Framework.Internal.OSPlatform;
 
 namespace Organizer.UnitTests
 {
@@ -84,9 +85,10 @@ namespace Organizer.UnitTests
             // Arrange
             var todoItem = new TodoItem();
             var page = 1;
+            int ProjectType = 1;
 
             // Act
-            var result = await _controller.Insert(todoItem, page, "") as RedirectToActionResult;
+            var result = await _controller.Insert(todoItem, page, "", ProjectType) as RedirectToActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -100,12 +102,13 @@ namespace Organizer.UnitTests
             // Arrange
             var todo = new TodoItem();
             var page = 1;
+            int ProjectType = 1;
 
             // Act
-            await _controller.Insert(todo, page, "");
+            await _controller.Insert(todo, page, "", ProjectType);
 
             // Assert
-            _homeServiceMock?.Verify(x => x.AddTodoItem(todo), Times.Once);
+            _homeServiceMock?.Verify(x => x.AddTodoItem(todo, ProjectType), Times.Once);
         }
 
         // UPDATE
@@ -133,12 +136,13 @@ namespace Organizer.UnitTests
             // Arrange
             var todo = new TodoItem { Id = 1, Name = "Test Todo" };
             var pageNumber = 1;
+            int ProjectType = 1;
 
             _homeServiceMock?.Setup(x => x.GetTodoById(todo.Id)).ReturnsAsync(todo);
-            _homeServiceMock?.Setup(x => x.UpdateTodoItem(todo)).Returns(Task.CompletedTask);
+            _homeServiceMock?.Setup(x => x.UpdateTodoItem(todo, ProjectType)).Returns(Task.CompletedTask);
 
             // Act
-            var result = await _controller.Update(todo, pageNumber, "") as RedirectToActionResult;
+            var result = await _controller.Update(todo, pageNumber, "", ProjectType) as RedirectToActionResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -152,11 +156,12 @@ namespace Organizer.UnitTests
             // Arrange
             var todo = new TodoItem { Id = 1, Name = "Test Todo" };
             var pageNumber = 1;
+            int ProjectType = 1;
 
             _homeServiceMock?.Setup(x => x.GetTodoById(todo.Id)).ReturnsAsync(() => null);
 
             // Act
-            var result = await _controller.Update(todo, pageNumber, "") as NotFoundResult;
+            var result = await _controller.Update(todo, pageNumber, "", ProjectType) as NotFoundResult;
 
             // Assert
             Assert.IsNotNull(result);
@@ -168,11 +173,12 @@ namespace Organizer.UnitTests
             // Arrange
             var todo = new TodoItem { Id = 1, Name = "Test Todo" };
             var pageNumber = 1;
+            int ProjectType = 1;
 
             _homeServiceMock?.Setup(x => x.GetTodoById(todo.Id)).ThrowsAsync(new Exception());
 
             // Act
-            var result = await _controller.Update(todo, pageNumber, "") as ViewResult;
+            var result = await _controller.Update(todo, pageNumber, "", ProjectType) as ViewResult;
 
             // Assert
             Assert.IsNotNull(result);
